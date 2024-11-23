@@ -6,7 +6,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Android\" />
-    <Folder Include="Core\Assets\Entites\" />
     <Folder Include="Core\Assets\Items\" />
     <Folder Include="Debug\" />
     <Folder Include="Windows\" />
@@ -15,6 +14,11 @@
     <PackageReference Include="Tomlyn" Version="0.17.0" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Core\Assets\Entites\Default\DefaultPlayer.toml" />
+    <Content Include="Core\Assets\Entites\TheRed.toml" />
     <Content Include="Core\Assets\Settings\InputMap.toml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Core\Assets\Entites\Default\Player.toml.cs" />
   </ItemGroup>
 </Project>

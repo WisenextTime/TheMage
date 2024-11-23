@@ -1,10 +1,15 @@
-﻿using TheMage.Core.Scripts.Elements;
+﻿using System.Collections.Generic;
+using TheMage.Core.Scripts.Elements;
+using TheMage.Core.Scripts.Entity;
+using TheMage.Core.Scripts.Entity.Models;
 
 namespace TheMage.Core.Scripts;
 
 public class Global
 {
 	public static Global GameGlobal => field??= new Global();
+
+	public Dictionary<string, EntityModel> Entities { get; set; } = new();
 
 	public static readonly string[] Inputs = [
 		//Movement
@@ -58,4 +63,9 @@ public class Global
 	[
 		"Hand", "Chest", "Leg", "Feet", "Hand1", "Hand2"
 	];
+
+	internal Global()
+	{
+		
+	}
 }

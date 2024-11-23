@@ -2,7 +2,7 @@
 
 namespace TheMage.Core.Scripts.Items;
 
-public class Equipment : Item
+public partial class Equipment : Item
 {
 	public Attribution Attributions { get; set; } = new();
 	public StatusCurve StatusCurves { get; set; } = StatusCurve.Default;
