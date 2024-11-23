@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+
+using TheMage.Core.Scripts.Elements;
 using TheMage.Core.Scripts.Entity.SubAttribution;
 using TheMage.Core.Scripts.Game;
 using TheMage.Core.Scripts.Items;
@@ -37,27 +39,27 @@ public partial class Entity : CharacterBody2D
 		Hp -= damages.Sum(d => d.Value.damage);
 	}
 	
-	public Dictionary<string,(int damage,bool crit)> GetDamages()
+	public Dictionary<Element,(int damage,bool crit)> GetDamages()
 	{
 		var trueAttribution = TrueAttribution;
-		var output = new Dictionary<string, (int damage, bool crit)>();
-		foreach (var element in Global.Elements.Select(e => e.Name))
+		var output = new Dictionary<Element, (int damage, bool crit)>();
+		foreach (var element in Global.Elements)
 		{
 			var cri = trueAttribution.Cri >= Random.Shared.NextSingle();
 			output.Add(element,
-				((int)(trueAttribution.ElementDatas.GetValueOrDefault(element).Atk * (1 + (cri ? trueAttribution.CriDmg : 0))),
+				((int)(trueAttribution.ElementDataSet.GetValueOrDefault(element).Atk * (1 + (cri ? trueAttribution.CriDmg : 0))),
 					cri));
 		}
 		return output;
 	}
 
-	public Dictionary<string, int> GetDefenses()
+	public Dictionary<Element, int> GetDefenses()
 	{
 		var trueAttribution = TrueAttribution;
-		var output = new Dictionary<string, int>();
-		foreach (var element in Global.Elements.Select(e => e.Name))
+		var output = new Dictionary<Element, int>();
+		foreach (var element in Global.Elements)
 		{
-			output.Add(element, trueAttribution.ElementDatas.GetValueOrDefault(element).Def);
+			output.Add(element, trueAttribution.ElementDataSet.GetValueOrDefault(element).Def);
 		}
 		return output;
 	}

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 
 using TheMage.Core.Extensions;
+using TheMage.Core.Scripts.Elements;
 
 namespace TheMage.Core.Scripts.Entity.SubAttribution;
 
@@ -26,7 +27,7 @@ public record Attribution : IAdditionOperators<Attribution, Attribution, Attribu
 
 	public float Cri { get; set; }
 	public float CriDmg { get; set; }
-	public Dictionary<string, ElementData> ElementDataSet = [];
+	public Dictionary<Element, ElementData> ElementDataSet = [];
 
 	public static TrueAttribution GetEntityTrueAttribution(Entity entity)
 	{
@@ -51,7 +52,7 @@ public record Attribution : IAdditionOperators<Attribution, Attribution, Attribu
 			MovSpd = MovSpd,
 			Cri = Cri,
 			CriDmg = CriDmg,
-			ElementDatas = ElementDataSet.ToDictionary(pair => pair.Key, pair => pair.Value.ToTrueElementData())
+			ElementDataSet = ElementDataSet.ToDictionary(static pair => pair.Key, pair => pair.Value.ToTrueElementData())
 		};
 
 	public static Attribution operator +(Attribution left, Attribution right) =>
@@ -68,8 +69,8 @@ public record Attribution : IAdditionOperators<Attribution, Attribution, Attribu
 			Cri = left.Cri + right.Cri,
 			CriDmg = left.CriDmg + right.CriDmg,
 			ElementDataSet = Global.Elements.ToDictionary
-				(e => e.Name,
-				 e => left.ElementDataSet.GetValueOrDefault(e.Name) + right.ElementDataSet.GetValueOrDefault(e.Name))
+				(static e => e,
+				 e => left.ElementDataSet.GetValueOrDefault(e) + right.ElementDataSet.GetValueOrDefault(e))
 		};
 }
 
@@ -85,7 +86,7 @@ public record TrueAttribution
 
 	public float Cri { get; set; }
 	public float CriDmg { get; set; }
-	public Dictionary<string, TrueElementData> ElementDatas = [];
+	public Dictionary<Element, TrueElementData> ElementDataSet = [];
 }
 
 public record ElementData : IAdditionOperators<ElementData, ElementData, ElementData>
