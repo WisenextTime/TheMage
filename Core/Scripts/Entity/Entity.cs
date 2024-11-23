@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using TheMage.Core.Scripts.Entity.SubAttribution;
 using TheMage.Core.Scripts.Game;
@@ -29,11 +30,26 @@ public partial class Entity : CharacterBody2D
 	
 	public Dictionary<string,(int damage,bool crit)> GetDamages()
 	{
-		throw new NotImplementedException();
+		var trueAttribution = Attribution.GetEntityTrueAttribution(this);
+		var output = new Dictionary<string, (int damage, bool crit)>();
+		foreach (var element in Global.Elements.Select(e => e.Name))
+		{
+			var cri = trueAttribution.Cri >= Random.Shared.NextSingle();
+			output.Add(element,
+				((int)(trueAttribution.ElementDatas.GetValueOrDefault(element).Atk * (1 + (cri ? trueAttribution.CriDmg : 0))),
+					cri));
+		}
+		return output;
 	}
 
 	public Dictionary<string, int> GetDefenses()
 	{
-		throw new NotImplementedException();
+		var trueAttribution = Attribution.GetEntityTrueAttribution(this);
+		var output = new Dictionary<string, int>();
+		foreach (var element in Global.Elements.Select(e => e.Name))
+		{
+			output.Add(element, trueAttribution.ElementDatas.GetValueOrDefault(element).Def);
+		}
+		return output;
 	}
 }
