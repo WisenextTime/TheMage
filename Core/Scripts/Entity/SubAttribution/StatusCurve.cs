@@ -40,9 +40,9 @@ public record StatusCurve
 			Cri = Cri((attribution.Cri, level)),
 			CriDmg = CriDmg((attribution.Cri, level)),
 		};
-		foreach (var elementData in attribution.ElementDatas)
+		foreach (var elementData in attribution.ElementDataSet)
 		{
-			output.ElementDatas.Add(elementData.Key,
+			output.ElementDataSet.Add(elementData.Key,
 				new ElementData()
 				{
 					Atk = Atk((elementData.Value.Atk, level)), AtkMul = AtkMul((elementData.Value.AtkMul, level)),
