@@ -18,6 +18,9 @@ public partial class Entity : CharacterBody2D
 	protected Controller Controller;
 	public float InitHp = 1;
 	public float InitMp = 1;
+
+	public int Hp;
+	public int Mp;
 	
 	public StatusCurve StatusCurve = SubAttribution.StatusCurve.Default;
 	[Export] public int Level = 1;
@@ -25,12 +28,18 @@ public partial class Entity : CharacterBody2D
 	public Attribution Attribution = new();
 	public Dictionary<string,Equipment> Equipments = [];
 	public List<Buff> Buffs = [];
+	
+	public TrueAttribution TrueAttribution => Attribution.GetEntityTrueAttribution(this);
 
-	public virtual void TakeDamage(Damage damage) { }
+	public virtual void TakeDamage(Damage damage, float multiplier = 1)
+	{
+		var damages = damage.GetDamage(this, multiplier);
+		Hp -= damages.Sum(d => d.Value.damage);
+	}
 	
 	public Dictionary<string,(int damage,bool crit)> GetDamages()
 	{
-		var trueAttribution = Attribution.GetEntityTrueAttribution(this);
+		var trueAttribution = TrueAttribution;
 		var output = new Dictionary<string, (int damage, bool crit)>();
 		foreach (var element in Global.Elements.Select(e => e.Name))
 		{
@@ -44,7 +53,7 @@ public partial class Entity : CharacterBody2D
 
 	public Dictionary<string, int> GetDefenses()
 	{
-		var trueAttribution = Attribution.GetEntityTrueAttribution(this);
+		var trueAttribution = TrueAttribution;
 		var output = new Dictionary<string, int>();
 		foreach (var element in Global.Elements.Select(e => e.Name))
 		{
