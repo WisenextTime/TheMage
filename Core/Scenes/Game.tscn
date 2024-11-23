@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://ckgv2bocdyn6p"]
+
+[ext_resource type="Script" path="res://Core/Scripts/Game/GameScene.cs" id="1_76dsi"]
+
+[node name="Game" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_76dsi")
+
+[node name="MapObject" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="GameObject" type="Node2D" parent="."]
+y_sort_enabled = true

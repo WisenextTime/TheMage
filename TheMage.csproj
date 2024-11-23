@@ -1,0 +1,20 @@
+<Project Sdk="Godot.NET.Sdk/4.3.0">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Android\" />
+    <Folder Include="Core\Assets\Entites\" />
+    <Folder Include="Core\Assets\Items\" />
+    <Folder Include="Debug\" />
+    <Folder Include="Windows\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Tomlyn" Version="0.17.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Core\Assets\Settings\InputMap.toml" />
+  </ItemGroup>
+</Project>

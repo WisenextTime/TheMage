@@ -1,0 +1,26 @@
+﻿[InputMap]
+MoveLeft = ["Key.65","Joy.L.Left"]
+MoveRight = ["Key.68","Joy.L.Right"]
+MoveUp = ["Key.87","Joy.L.Up"]
+MoveDown = ["Key.83","Joy.L.Down"]
+
+ActionUse = ["Key.69","Joy.0"]
+ActionAttack = ["Key.32","Joy.2"]
+ActionRun = ["Key.4194326","Joy.9"]
+
+MagicLeft = ["Joy.LT"]
+MagicRight = ["Joy.RT"]
+
+MagicJoy1 = ["Joy.2"]
+MagicJoy2 = ["Joy.3"]
+MagicJoy3 = ["Joy.1"]
+MagicJoy4 = ["Joy.0"]
+
+Magic1 = ["Key.49"]
+Magic2 = ["Key.50"]
+Magic3 = ["Key.51"]
+Magic4 = ["Key.52"]
+Magic5 = ["Key.82"]
+Magic6 = ["Key.70"]
+Magic7 = ["Key.86"]
+Magic8 = ["Key.67"]
