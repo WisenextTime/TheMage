@@ -7,7 +7,7 @@ using TheMage.Core.Extensions;
 
 namespace TheMage.Core.Scripts.Entity.SubAttribution;
 
-public record Attribution
+public record Attribution : IAdditionOperators<Attribution, Attribution, Attribution>
 {
 	public int MaxHp { get; set; }
 	public int MaxMp { get; set; }
@@ -26,7 +26,7 @@ public record Attribution
 
 	public float Cri { get; set; }
 	public float CriDmg { get; set; }
-	public Dictionary<string, ElementData> ElementDatas = [];
+	public Dictionary<string, ElementData> ElementDataSet = [];
 
 	public static TrueAttribution GetEntityTrueAttribution(Entity entity)
 	{
@@ -35,63 +35,42 @@ public record Attribution
 		                                  .Select(e => e.StatusCurves.Transform(e.Attributions, e.Level)).ToArray();
 		var buffAttributions = entity.Buffs.Select(b => b.AttributeModifier).ToArray();
 
-		var value = new Attribution()
-		{
-			MaxHp = GetProperty(a => a.MaxHp),
-			MaxMp = GetProperty(a => a.MaxMp),
-			MaxHpMul = GetProperty(a => a.MaxHpMul),
-			MaxMpMul = GetProperty(a => a.MaxMpMul),
-			HpRegSpd = GetProperty(a => a.HpRegSpd),
-			MpRegSpd = GetProperty(a => a.MpRegSpd),
-			AtkSpd = GetProperty(a => a.AtkSpd),
-			MovSpd = GetProperty(a => a.MovSpd),
-			Cri = GetProperty(a => a.Cri),
-			CriDmg = GetProperty(a => a.CriDmg),
+		Attribution[] allAttributions = [sourceAttribution, ..equipmentAttributions, ..buffAttributions];
 
-			ElementDatas = new Dictionary<string, ElementData>()
-		};
-		foreach (var element in Global.Elements.Select(e => e.Name))
-		{
-			value.ElementDatas.Add(element, new ElementData
-			{
-				Atk = GetProperty(a => a.ElementDatas.GetValueOrDefault(element).Atk),
-				Def = GetProperty(a => a.ElementDatas.GetValueOrDefault(element).Def),
-				AtkMul = GetProperty(a => a.ElementDatas.GetValueOrDefault(element).AtkMul),
-				DefMul = GetProperty(a => a.ElementDatas.GetValueOrDefault(element).DefMul),
-			});
-		}
-		var output = new TrueAttribution()
-		{
-			MaxHp = (int)(value.MaxHp * (1 + value.MaxHpMul)),
-			MaxMp = (int)(value.MaxMp * (1 + value.MaxMpMul)),
-			HpRegSpd = value.HpRegSpd,
-			MpRegSpd = value.MpRegSpd,
-			AtkSpd = value.AtkSpd,
-			MovSpd = value.MovSpd,
-			Cri = value.Cri,
-			CriDmg = value.CriDmg,
-			ElementDatas = new Dictionary<string, TrueElementData>()
-		};
-		foreach (var element in Global.Elements.Select(e => e.Name))
-		{
-			output.ElementDatas.Add(element, new TrueElementData()
-			{
-				Atk = (int)(value.ElementDatas.GetValueOrDefault(element).Atk *
-					(1 + value.ElementDatas.GetValueOrDefault(element).AtkMul)),
-				Def = (int)(value.ElementDatas.GetValueOrDefault(element).Def *
-					(1 + value.ElementDatas.GetValueOrDefault(element).DefMul)),
-			});
-		}
-		return output;
-
-		T GetProperty<T>(Func<Attribution, T> selector) where T : IAdditionOperators<T, T, T> =>
-			CalculateProperty(sourceAttribution, [equipmentAttributions, buffAttributions], selector);
+		return allAttributions.Sum().ToTrueAttribution();
 	}
 
-	private static T CalculateProperty<T>(
-		Attribution source, IEnumerable<IEnumerable<Attribution>> modifiers, Func<Attribution, T> selector)
-		where T : IAdditionOperators<T, T, T> =>
-		selector(source) + modifiers.Select(attributes => attributes.Select(selector).Sum()).Sum();
+	public TrueAttribution ToTrueAttribution() =>
+		new()
+		{
+			MaxHp = (int)(MaxHp * (1 + MaxHpMul)),
+			MaxMp = (int)(MaxMp * (1 + MaxMpMul)),
+			HpRegSpd = HpRegSpd,
+			MpRegSpd = MpRegSpd,
+			AtkSpd = AtkSpd,
+			MovSpd = MovSpd,
+			Cri = Cri,
+			CriDmg = CriDmg,
+			ElementDatas = ElementDataSet.ToDictionary(pair => pair.Key, pair => pair.Value.ToTrueElementData())
+		};
+
+	public static Attribution operator +(Attribution left, Attribution right) =>
+		new()
+		{
+			MaxHp = left.MaxHp + right.MaxHp,
+			MaxMp = left.MaxMp + right.MaxMp,
+			MaxHpMul = left.MaxHpMul + right.MaxHpMul,
+			MaxMpMul = left.MaxMpMul + right.MaxMpMul,
+			HpRegSpd = left.HpRegSpd + right.HpRegSpd,
+			MpRegSpd = left.MpRegSpd + right.MpRegSpd,
+			AtkSpd = left.AtkSpd + right.AtkSpd,
+			MovSpd = left.MovSpd + right.MovSpd,
+			Cri = left.Cri + right.Cri,
+			CriDmg = left.CriDmg + right.CriDmg,
+			ElementDataSet = Global.Elements.ToDictionary
+				(e => e.Name,
+				 e => left.ElementDataSet.GetValueOrDefault(e.Name) + right.ElementDataSet.GetValueOrDefault(e.Name))
+		};
 }
 
 public record TrueAttribution
@@ -109,12 +88,26 @@ public record TrueAttribution
 	public Dictionary<string, TrueElementData> ElementDatas = [];
 }
 
-public record ElementData
+public record ElementData : IAdditionOperators<ElementData, ElementData, ElementData>
 {
 	public int Atk;
 	public int Def;
 	public float AtkMul;
 	public float DefMul;
+
+	public TrueElementData ToTrueElementData() => new()
+	{
+		Atk = (int)(Atk * (AtkMul + 1)),
+		Def = (int)(Def * (DefMul + 1)),
+	};
+
+	public static ElementData operator +(ElementData left, ElementData right) => new()
+	{
+		Atk = left.Atk + right.Atk,
+		Def = left.Def + right.Def,
+		AtkMul = left.AtkMul + right.AtkMul,
+		DefMul = left.DefMul + right.DefMul,
+	};
 }
 
 public record TrueElementData
