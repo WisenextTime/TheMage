@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Godot;
 
 using TheMage.Core.Scripts.Elements;
@@ -16,21 +17,21 @@ public partial class Entity : CharacterBody2D
 	[Export] public string Id;
 	public int PhysicsLayer { get; set; }
 	[Export(PropertyHint.Range, "-2,9")] public int Team { get; set; } = -1;
-	
+
 	protected Controller Controller;
 	public float InitHp = 1;
 	public float InitMp = 1;
 
 	public int Hp;
 	public int Mp;
-	
+
 	public StatusCurve StatusCurve = SubAttribution.StatusCurve.Default;
 	[Export] public int Level = 1;
-	
+
 	public Attribution Attribution = new();
-	public Dictionary<string,Equipment> Equipments = [];
+	public Dictionary<EquipSlot, Equipment> Equipments = [];
 	public List<Buff> Buffs = [];
-	
+
 	public TrueAttribution TrueAttribution => Attribution.GetEntityTrueAttribution(this);
 
 	public virtual void TakeDamage(Damage damage, float multiplier = 1)
@@ -38,29 +39,16 @@ public partial class Entity : CharacterBody2D
 		var damages = damage.GetDamage(this, multiplier);
 		Hp -= damages.Sum(d => d.Value.damage);
 	}
-	
-	public Dictionary<Element,(int damage,bool crit)> GetDamages()
+
+	public ElementValues<(int damage, bool crit)> GetDamages()
 	{
-		var trueAttribution = TrueAttribution;
-		var output = new Dictionary<Element, (int damage, bool crit)>();
-		foreach (var element in Global.Elements)
+		return ElementValues.Create(TrueAttribution.ElementDataSet, TrueAttribution, static (data, attribution) =>
 		{
-			var cri = trueAttribution.Cri >= Random.Shared.NextSingle();
-			output.Add(element,
-				((int)(trueAttribution.ElementDataSet.GetValueOrDefault(element).Atk * (1 + (cri ? trueAttribution.CriDmg : 0))),
-					cri));
-		}
-		return output;
+			var cri = attribution.Cri >= Random.Shared.NextSingle();
+			var damage = (int)(data.Atk * (1 + (cri ? attribution.CriDmg : 0)));
+			return (damage, cri);
+		});
 	}
 
-	public Dictionary<Element, int> GetDefenses()
-	{
-		var trueAttribution = TrueAttribution;
-		var output = new Dictionary<Element, int>();
-		foreach (var element in Global.Elements)
-		{
-			output.Add(element, trueAttribution.ElementDataSet.GetValueOrDefault(element).Def);
-		}
-		return output;
-	}
+	public ElementValues<int> GetDefenses() => ElementValues.Create(TrueAttribution.ElementDataSet, static data => data.Def);
 }

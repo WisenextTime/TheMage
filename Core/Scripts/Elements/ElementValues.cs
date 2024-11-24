@@ -125,19 +125,49 @@ public readonly struct ElementValues<TValue> : IReadOnlyDictionary<Element, TVal
 	#endregion
 }
 
-//Static Creator
+/// <summary>
+/// Static factory methods for <see cref="ElementValues{TValue}"/>
+/// </summary>
 public static class ElementValues
 {
-	public static ElementValues<TValue> Create<TValue>(TValue value) => new(new TValue[ElementExtensions.ElementCount].Fill(value));
+	/// <summary>
+	/// Creates a new <see cref="ElementValues{TValue}"/> with all elements filled with <paramref name="value"/>
+	/// </summary>
+	public static ElementValues<TValue> CreateFilled<TValue>(TValue value) => new(new TValue[ElementExtensions.ElementCount].Fill(value));
 
+	/// <summary>
+	/// Creates a new <see cref="ElementValues{TValue}"/> from an array
+	/// </summary>
+	/// <param name="values">
+	/// Source array. Should be of length <see cref="ElementExtensions.ElementCount"/>.
+	/// </param>
 	public static ElementValues<TValue> Create<TValue>(TValue[] values) => new(values);
 
+	/// <summary>
+	/// Creates a new <see cref="ElementValues{TValue}"/> with a selector for each element
+	/// </summary>
 	public static ElementValues<TValue> Create<TValue>(Func<Element, TValue> selector) =>
 		new(Enum.GetValues<Element>().Select(selector).ToArray());
 
+	/// <summary>
+	/// Creates a new <see cref="ElementValues{TValue}"/> from a <see cref="Element"/>-<see cref="TValue"/> dictionary.
+	/// (or any collection of a KeyValuePair&lt;Element, TValue&gt;) 
+	/// </summary>
 	public static ElementValues<TValue> Create<TValue>(IEnumerable<KeyValuePair<Element, TValue>> source) => new(source);
 
-	public static ElementValues<TValue> Create<TValue, TSource>(IEnumerable<KeyValuePair<Element, TSource>> source,
+	/// <summary>
+	/// Creates a new <see cref="ElementValues{TValue}"/> from a collection of a KeyValuePair&lt;Element, TSource&gt; 
+	/// and a selector from TSource to TValue
+	/// </summary>
+	public static ElementValues<TValue> Create<TSource, TValue>(IEnumerable<KeyValuePair<Element, TSource>> source,
 	                                                            Func<TSource, TValue> selector) =>
 		new(source.Select(x => new KeyValuePair<Element, TValue>(x.Key, selector(x.Value))));
+
+	/// <summary>
+	/// Creates a new <see cref="ElementValues{TValue}"/> from a collection of a KeyValuePair&lt;Element, TSource&gt;, 
+	/// a extern data, and a selector from (TSource, TData) to TValue
+	/// </summary>
+	public static ElementValues<TValue> Create<TSource, TData, TValue>(IEnumerable<KeyValuePair<Element, TSource>> source,
+	                                                                   TData data, Func<TSource, TData, TValue> selector) =>
+		new(source.Select(x => new KeyValuePair<Element, TValue>(x.Key, selector(x.Value, data))));
 }

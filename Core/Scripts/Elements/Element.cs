@@ -65,7 +65,7 @@ public static class ElementExtensions
 		return Enum.GetValues<Element>()
 		           .Where(byElement => predicate(modifiedBy[byElement]))
 		           .Select(static byElement => ElementValues.Create(element => ModifierMatrix[(int)element, (int)byElement]))
-		           .Aggregate(ElementValues.Create(1f), static (values, by) => values.Multiple(by));
+		           .Aggregate(ElementValues.CreateFilled(1f), static (values, by) => values.Multiple(by));
 	}
 
 	public static ElementValues<TValue> Add<TValue>(this ElementValues<TValue> self, ElementValues<TValue> other)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using TheMage.Core.Scripts.Elements;
+using TheMage.Core.Scripts.Items;
 
 namespace TheMage.Core.Scripts;
 
@@ -24,8 +25,5 @@ public class Global
 
 	public static readonly Element[] Elements = Enum.GetValues<Element>();
 
-	public static readonly string[] EquipmentPosition =
-	[
-		"Hand", "Chest", "Leg", "Feet", "Hand1", "Hand2"
-	];
+	public static readonly EquipSlot[] EquipSlots = Enum.GetValues<EquipSlot>();
 }
