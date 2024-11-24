@@ -31,6 +31,8 @@ public partial class Entity : CharacterBody2D
 	public Attribution Attribution = new();
 	public Dictionary<EquipSlot, Equipment> Equipments = [];
 	public List<Buff> Buffs = [];
+	
+	public ElementValues<bool> AttachedElements => throw new NotImplementedException();
 
 	public TrueAttribution TrueAttribution => Attribution.GetEntityTrueAttribution(this);
 
@@ -40,7 +42,7 @@ public partial class Entity : CharacterBody2D
 		Hp -= damages.Sum(d => d.Value.damage);
 	}
 
-	public ElementValues<(int damage, bool crit)> GetDamages()
+	public ElementValues<(int damage, bool crit)> GetAttackDamages()
 	{
 		return ElementValues.Create(TrueAttribution.ElementDataSet, TrueAttribution, static (data, attribution) =>
 		{

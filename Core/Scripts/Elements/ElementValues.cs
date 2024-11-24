@@ -122,6 +122,9 @@ public readonly struct ElementValues<TValue> : IReadOnlyDictionary<Element, TVal
 	public ElementValues<TResult> CalculateWith<TOther, TResult>(ElementValues<TOther> other, Func<TValue, TOther, TResult> calculation) =>
 		new(_values.Zip(other._values, calculation).ToArray());
 
+	public ElementValues<(TValue, TOther)> CombineWith<TOther>(ElementValues<TOther> other) =>
+		CalculateWith(other, static (x, y) => (x, y));
+
 	#endregion
 }
 
