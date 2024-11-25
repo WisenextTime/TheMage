@@ -9,24 +9,24 @@ namespace TheMage.Core.Scripts.Entities.SubAttribution;
 
 public record struct Attribution() : IAdditionOperators<Attribution, Attribution, Attribution>
 {
-	public int MaxHp { get; set; }
-	public int MaxMp { get; set; }
+	public int MaxHp { get; init; }
+	public int MaxMp { get; init; }
 
-	public float MaxHpMul { get; set; }
+	public float MaxHpMul { get; init; }
 
-	public float MaxMpMul { get; set; }
-	public float HpRegSpd { get; set; }
-	public float MpRegSpd { get; set; }
+	public float MaxMpMul { get; init; }
+	public float HpRegSpd { get; init; }
+	public float MpRegSpd { get; init; }
 
-	public float InitHp { get; set; } = 1;
-	public float InitMp { get; set; } = 1;
+	public float InitHp { get; init; } = 1;
+	public float InitMp { get; init; } = 1;
 
-	public float AtkSpd { get; set; }
-	public float MovSpd { get; set; }
+	public float AtkSpd { get; init; }
+	public float MovSpd { get; init; }
 
-	public float Cri { get; set; }
-	public float CriDmg { get; set; }
-	public ElementValues<ElementData> ElementDataSet { get; set; } = [];
+	public float Cri { get; init; }
+	public float CriDmg { get; init; }
+	public ElementValues<ElementData> ElementDataSet { get; init; } = [];
 
 	public FinalAttribution ToFinal() =>
 		new()
@@ -76,10 +76,10 @@ public record struct FinalAttribution()
 
 public record struct ElementData : IAdditionOperators<ElementData, ElementData, ElementData>
 {
-	public int Atk { get; set; }
-	public int Def { get; set; }
-	public float AtkMul { get; set; }
-	public float DefMul { get; set; }
+	public int Atk { get; init; }
+	public int Def { get; init; }
+	public float AtkMul { get; init; }
+	public float DefMul { get; init; }
 
 	public FinalElementData ToFinal() => new()
 	{

@@ -32,10 +32,10 @@ public partial class Entity : CharacterBody2D
 	public int Hp { get; set; }
 	public int Mp { get; set; }
 
-	public StatusCurve StatusCurve { get; protected set; } = StatusCurve.Default;
+	public StatusCurve StatusCurve { get; set; } = StatusCurve.Default;
 	[Export] public int Level { get; set; } = 1;
 
-	public Attribution Attribution { get; protected set; } = new();
+	public Attribution Attribution { get; set; } = new();
 	public List<Attribution> AttributionModifiers { get; } = [];
 
 	private readonly Dictionary<EquipSlot, Equipment> _equipments = [];
