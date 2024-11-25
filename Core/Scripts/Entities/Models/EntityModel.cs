@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using TheMage.Core.Scripts.Entity.SubAttribution;
 
-namespace TheMage.Core.Scripts.Entity.Models;
+namespace TheMage.Core.Scripts.Entities.Models;
 
 public record EntityModel
 {

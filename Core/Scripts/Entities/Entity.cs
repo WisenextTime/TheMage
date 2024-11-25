@@ -23,6 +23,8 @@ public partial class Entity : CharacterBody2D
 	[Export(PropertyHint.Range, "-2,9")]
 	public int Team { get; set; } = -1;
 
+	public string EntityName { get; set; } = "";
+
 	protected Controller Controller;
 	public float InitHp { get; set; } = 1;
 	public float InitMp { get; set; } = 1;
@@ -44,7 +46,15 @@ public partial class Entity : CharacterBody2D
 
 	public ElementValues<bool> AttachedElements => throw new NotImplementedException(); //你自己实现吧，嘿嘿
 
-	public FinalAttribution FinalAttribution => (Attribution + AttributionModifiers.Sum()).ToFinal();
+	public FinalAttribution FinalAttribution => (StatusCurve.Transform(Attribution, Level) + AttributionModifiers.Sum()).ToFinal();
+
+	public Weapon MainWeapon => _equipments.GetValueOrDefault(EquipSlot.Hand) as Weapon;
+
+
+	public override void _Process(double delta)
+	{
+		ProcessUpdate?.Invoke(delta);
+	}
 
 
 	#region Damage

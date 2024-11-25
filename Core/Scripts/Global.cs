@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using TheMage.Core.Scripts.Elements;
+using TheMage.Core.Scripts.Entities.Models;
 using TheMage.Core.Scripts.Items;
 
 namespace TheMage.Core.Scripts;
@@ -9,6 +10,8 @@ namespace TheMage.Core.Scripts;
 public class Global
 {
 	public static Global GameGlobal => field ??= new Global();
+
+	public Dictionary<string, EntityModel> Entities { get; set; } = new();
 
 	public static readonly string[] Inputs =
 	[

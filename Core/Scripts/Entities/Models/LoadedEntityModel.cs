@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TheMage.Core.Scripts.Entity.Models;
+namespace TheMage.Core.Scripts.Entities.Models;
 
 public record LoadedEntityModel
 {

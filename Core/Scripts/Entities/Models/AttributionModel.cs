@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace TheMage.Core.Scripts.Entity.Models;
+using TheMage.Core.Scripts.Entities.SubAttribution;
+
+namespace TheMage.Core.Scripts.Entities.Models;
 
 public record AttributionModel
 {

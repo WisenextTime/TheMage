@@ -1,4 +1,4 @@
-﻿namespace TheMage.Core.Scripts.Entity;
+﻿namespace TheMage.Core.Scripts.Entities;
 
 public partial class Player : Entity
 {

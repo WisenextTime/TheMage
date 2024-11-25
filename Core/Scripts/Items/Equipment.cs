@@ -3,7 +3,7 @@ using TheMage.Core.Scripts.Entities.SubAttribution;
 
 namespace TheMage.Core.Scripts.Items;
 
-public class Equipment : Item, IStatement
+public partial class Equipment : Item, IStatement
 {
 	public Attribution Attributions
 	{
