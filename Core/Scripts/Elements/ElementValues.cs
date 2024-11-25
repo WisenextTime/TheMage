@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 
 using TheMage.Core.Extensions;
 
 namespace TheMage.Core.Scripts.Elements;
 
-public readonly struct ElementValues<TValue> : IReadOnlyDictionary<Element, TValue>
+public readonly record struct ElementValues<TValue> : IReadOnlyDictionary<Element, TValue>
 {
 	private readonly TValue[] _values = new TValue[ElementExtensions.ElementCount];
 
@@ -126,6 +127,22 @@ public readonly struct ElementValues<TValue> : IReadOnlyDictionary<Element, TVal
 		CalculateWith(other, static (x, y) => (x, y));
 
 	#endregion
+
+
+	private bool PrintMembers(StringBuilder builder)
+	{
+		builder.Append('[');
+		foreach (var (element, value) in this)
+		{
+			builder.Append(element.ToString());
+			builder.Append('=');
+			builder.Append(value);
+			builder.Append(',');
+		}
+
+		builder.Remove(builder.Length - 1, 1);
+		return true;
+	}
 }
 
 /// <summary>

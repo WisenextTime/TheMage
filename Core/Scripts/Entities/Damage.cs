@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 using TheMage.Core.Scripts.Elements;
 
-namespace TheMage.Core.Scripts.Entity;
+namespace TheMage.Core.Scripts.Entities;
 
 public class Damage(Entity source)
 {
